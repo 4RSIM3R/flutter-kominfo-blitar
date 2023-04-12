@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/model/example_model.dart';
-import 'package:flutter_training/submit_attendance_page.dart';
+import 'package:flutter_training/pages/attendance/submit_attendance_page.dart';
 
 class ListAttendancePage extends StatelessWidget {
   const ListAttendancePage({super.key});

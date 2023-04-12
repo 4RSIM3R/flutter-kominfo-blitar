@@ -15,6 +15,7 @@ class SubmitAttendancePage extends StatelessWidget {
         padding: const EdgeInsets.all(21),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextField(
               decoration: InputDecoration(
@@ -22,7 +23,7 @@ class SubmitAttendancePage extends StatelessWidget {
               ),
             ),
             DropdownButtonFormField<String>(
-               decoration: const InputDecoration(
+              decoration: const InputDecoration(
                 label: Text("Lokasi Kerja"),
               ),
               items: const [
@@ -35,6 +36,28 @@ class SubmitAttendancePage extends StatelessWidget {
                   child: Text("WFO"),
                 ),
               ],
+              onChanged: (_) {},
+            ),
+            SizedBox(height: 16),
+            Text('Alat Kerja'),
+            CheckboxListTile(
+              title: Text('Laptop'),
+              value: false,
+              onChanged: (_) {},
+            ),
+            CheckboxListTile(
+              title: Text('Komputer'),
+              value: false,
+              onChanged: (_) {},
+            ),
+            CheckboxListTile(
+              title: Text('HP'),
+              value: false,
+              onChanged: (_) {},
+            ),
+            CheckboxListTile(
+              title: Text('Lainya'),
+              value: false,
               onChanged: (_) {},
             ),
           ],

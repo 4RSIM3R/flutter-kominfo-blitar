@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_training/model/example_model.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SubmitAttendancePage extends StatefulWidget {
@@ -22,6 +24,8 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
 
   XFile? gambarSelfie;
 
+  Position? posisiUser;
+
   selfie(ImageSource source) async {
     final image = await ImagePicker().pickImage(
       source: source,
@@ -33,6 +37,55 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
         gambarSelfie = image;
       });
     }
+  }
+
+  updateLokasi() async {
+    try {
+      final position = await _determinePosition();
+
+      setState(() {
+        posisiUser = position;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
   }
 
   @override
@@ -178,7 +231,29 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                 ),
               ],
             ),
-            if (gambarSelfie != null) Image.file(File(gambarSelfie!.path)),
+            if (gambarSelfie != null)
+              if (kIsWeb)
+                Image.network(
+                  gambarSelfie!.path,
+                )
+              else
+                Image.file(
+                  File(gambarSelfie!.path),
+                ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                if (posisiUser != null)
+                  Text('${posisiUser!.latitude} ${posisiUser!.longitude}')
+                else
+                  Text('Lokasi belum tersedia'),
+                Spacer(),
+                FilledButton(
+                  child: Text('Perbarui Lokasi'),
+                  onPressed: updateLokasi,
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -278,7 +353,6 @@ class _TombolBintangState extends State<TombolBintang> {
     );
   }
 }
-
 
 // FilledButton(
 //   onPressed: () async {

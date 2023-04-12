@@ -14,6 +14,8 @@ class SubmitAttendancePage extends StatefulWidget {
 }
 
 class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController _rencanaController = TextEditingController();
 
   String? lokasiKerja;
@@ -58,7 +60,6 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
@@ -103,158 +104,286 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(21),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _rencanaController,
-              decoration: InputDecoration(
-                label: Text("Rencana Pekerjaan"),
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _rencanaController,
+                decoration: InputDecoration(
+                  label: Text("Rencana Pekerjaan"),
+                ),
+                validator: (value) {
+                  if (value == null || value == '') {
+                    return 'Field ini wajib diisi';
+                  }
+                },
               ),
-            ),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                label: Text("Lokasi Kerja"),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  label: Text("Lokasi Kerja"),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: "WFH",
+                    child: Text("WFH"),
+                  ),
+                  DropdownMenuItem(
+                    value: "WFO",
+                    child: Text("WFO"),
+                  ),
+                ],
+                onChanged: (val) {
+                  setState(() {
+                    lokasiKerja = val;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return 'Harap memilih lokasi kerja';
+                  }
+                },
               ),
-              items: const [
-                DropdownMenuItem(
-                  value: "WFH",
-                  child: Text("WFH"),
+              SizedBox(height: 16),
+              Text('Alat Kerja yang dipilih: ${alatKerja.join(', ')}'),
+              FormField<List<String>>(
+                initialValue: alatKerja,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                builder: (state) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CheckboxListTile(
+                      title: Text('Laptop'),
+                      value: alatKerja.contains('laptop'),
+                      onChanged: (checked) {
+                        // state.
+                        if (checked!) {
+                          alatKerja.add('laptop');
+                        } else {
+                          alatKerja.remove('laptop');
+                        }
+                        state.didChange(alatKerja);
+                        setState(() {});
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text('Komputer'),
+                      value: alatKerja.contains('komputer'),
+                      onChanged: (checked) {
+                        if (checked!) {
+                          alatKerja.add('komputer');
+                        } else {
+                          alatKerja.remove('komputer');
+                        }
+                        state.didChange(alatKerja);
+                        setState(() {});
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text('HP'),
+                      value: alatKerja.contains('hp'),
+                      onChanged: (checked) {
+                        if (checked!) {
+                          alatKerja.add('hp');
+                        } else {
+                          alatKerja.remove('hp');
+                        }
+                        state.didChange(alatKerja);
+                        setState(() {});
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text('Lainya'),
+                      value: alatKerja.contains('lainya'),
+                      onChanged: (checked) {
+                        if (checked!) {
+                          alatKerja.add('lainya');
+                        } else {
+                          alatKerja.remove('lainya');
+                        }
+                        state.didChange(alatKerja);
+                        setState(() {});
+                      },
+                    ),
+                    if (state.hasError)
+                      Text(
+                        state.errorText!,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                  ],
                 ),
-                DropdownMenuItem(
-                  value: "WFO",
-                  child: Text("WFO"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Harap pilih minimal 1 alat kerja';
+                  }
+                },
+              ),
+              SizedBox(height: 16),
+              Text('Suasana Hati'),
+              FormField<String>(
+                initialValue: suasana,
+                builder: (state) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RadioListTile<String>(
+                      title: Text('Sedih'),
+                      value: 'sedih',
+                      groupValue: suasana,
+                      onChanged: (val) {
+                        state.didChange(val!);
+                        setState(() {
+                          suasana = val;
+                        });
+                      },
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Senang'),
+                      value: 'senang',
+                      groupValue: suasana,
+                      onChanged: (val) {
+                        state.didChange(val!);
+
+                        setState(() {
+                          suasana = val;
+                        });
+                      },
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Netral'),
+                      value: 'netral',
+                      groupValue: suasana,
+                      onChanged: (val) {
+                        state.didChange(val!);
+
+                        setState(() {
+                          suasana = val;
+                        });
+                      },
+                    ),
+                    if (state.hasError)
+                      Text(
+                        state.errorText!,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                  ],
                 ),
-              ],
-              onChanged: (val) {
-                setState(() {
-                  lokasiKerja = val;
-                });
-              },
-            ),
-            SizedBox(height: 16),
-            Text('Alat Kerja yang dipilih: ${alatKerja.join(', ')}'),
-            CheckboxListTile(
-              title: Text('Laptop'),
-              value: alatKerja.contains('laptop'),
-              onChanged: (checked) {
-                if (checked!) {
-                  alatKerja.add('laptop');
-                } else {
-                  alatKerja.remove('laptop');
-                }
-                setState(() {});
-              },
-            ),
-            CheckboxListTile(
-              title: Text('Komputer'),
-              value: alatKerja.contains('komputer'),
-              onChanged: (checked) {
-                if (checked!) {
-                  alatKerja.add('komputer');
-                } else {
-                  alatKerja.remove('komputer');
-                }
-                setState(() {});
-              },
-            ),
-            CheckboxListTile(
-              title: Text('HP'),
-              value: alatKerja.contains('hp'),
-              onChanged: (checked) {
-                if (checked!) {
-                  alatKerja.add('hp');
-                } else {
-                  alatKerja.remove('hp');
-                }
-                setState(() {});
-              },
-            ),
-            CheckboxListTile(
-              title: Text('Lainya'),
-              value: alatKerja.contains('lainya'),
-              onChanged: (checked) {
-                if (checked!) {
-                  alatKerja.add('lainya');
-                } else {
-                  alatKerja.remove('lainya');
-                }
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 16),
-            Text('Suasana Hati'),
-            RadioListTile<String>(
-              title: Text('Sedih'),
-              value: 'sedih',
-              groupValue: suasana,
-              onChanged: (val) {
-                setState(() {
-                  suasana = val!;
-                });
-              },
-            ),
-            RadioListTile<String>(
-              title: Text('Senang'),
-              value: 'senang',
-              groupValue: suasana,
-              onChanged: (val) {
-                setState(() {
-                  suasana = val!;
-                });
-              },
-            ),
-            RadioListTile<String>(
-              title: Text('Netral'),
-              value: 'netral',
-              groupValue: suasana,
-              onChanged: (val) {
-                setState(() {
-                  suasana = val!;
-                });
-              },
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton(
-                    child: Text('Selfie'),
-                    onPressed: () => selfie(ImageSource.camera),
-                  ),
+                validator: (val) {
+                  if (val == null) {
+                    return 'Harap isi suasana hati!';
+                  } else if (val == 'sedih') {
+                    return 'jangan bersedih!';
+                  }
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
+              SizedBox(height: 16),
+              FormField<XFile>(
+                builder: (state) => Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton(
+                            child: Text('Selfie'),
+                            onPressed: () {
+                              selfie(ImageSource.camera);
+                              state.didChange(gambarSelfie);
+
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton(
+                            child: Text('Gallery'),
+                            onPressed: () {
+                              selfie(ImageSource.gallery);
+                              state.didChange(gambarSelfie);
+
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                     if (state.hasError)
+                      Text(
+                        state.errorText!,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                  ],
                 ),
-                Expanded(
-                  child: FilledButton(
-                    child: Text('Gallery'),
-                    onPressed: () => selfie(ImageSource.gallery),
-                  ),
-                ),
-              ],
-            ),
-            if (gambarSelfie != null)
-              if (kIsWeb)
-                Image.network(
-                  gambarSelfie!.path,
-                )
-              else
-                Image.file(
-                  File(gambarSelfie!.path),
-                ),
-            SizedBox(height: 16),
-            Row(
-              children: [
-                if (posisiUser != null)
-                  Text('${posisiUser!.latitude} ${posisiUser!.longitude}')
+                validator: (file) {
+                  if(file == null) {
+                    return 'Wajib selfie!';
+                  }
+                },
+              ),
+              if (gambarSelfie != null)
+                if (kIsWeb)
+                  Image.network(
+                    gambarSelfie!.path,
+                  )
                 else
-                  Text('Lokasi belum tersedia'),
-                Spacer(),
-                FilledButton(
-                  child: Text('Perbarui Lokasi'),
-                  onPressed: updateLokasi,
+                  Image.file(
+                    File(gambarSelfie!.path),
+                  ),
+              SizedBox(height: 16),
+              FormField<Position>(
+                builder: (state) => Column(
+                  children: [
+                    Row(
+                      children: [
+                        if (posisiUser != null)
+                          Text('${posisiUser!.latitude} ${posisiUser!.longitude}')
+                        else
+                          Text('Lokasi belum tersedia'),
+                        Spacer(),
+                        FilledButton(
+                          child: Text('Perbarui Lokasi'),
+                          onPressed: () async {
+                            await updateLokasi();
+                            state.didChange(posisiUser);
+                          },
+                        ),
+                      ],
+                    ),
+                    if (state.hasError)
+                      Text(
+                        state.errorText!,
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                  ],
                 ),
-              ],
-            )
-          ],
+                validator: (posisi) {
+                  if(posisi == null) {
+                    return 'Harap perbarui lokasi!';
+                  }
+                },
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  child: Text('Submit'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      print("OK");
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

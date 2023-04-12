@@ -30,12 +30,38 @@ class SubmitAttendancePage extends StatelessWidget {
               initialFavoriteNum: 1000,
             ),
           ),
+          Center(
+            child: HelloMessage(nama: "Dani"),
+          ),
+          Center(
+            child: HelloMessage(nama: "Ahmad"),
+          ),
+
+          Center(
+            child: HelloMessage(nama: "Budi"),
+          ),
         ],
       ),
     );
   }
 }
 
+// Contoh StatelesWidget
+class HelloMessage extends StatelessWidget {
+  const HelloMessage({
+    super.key,
+    required this.nama,
+  });
+
+  final String nama;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("Halo, $nama");
+  }
+}
+
+// Contoh StatefulWidget
 class TombolBintang extends StatefulWidget {
   const TombolBintang({
     super.key,
@@ -65,7 +91,7 @@ class _TombolBintangState extends State<TombolBintang> {
 
     // ketika initState dijalankan, ubah nilai isFavorite menjadi widget.initialIsLoved
     isFavorite = widget.initialIsLoved;
-    
+
     print('widget ditampilkan di layar');
   }
 

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_training/model/example_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SubmitAttendancePage extends StatefulWidget {
   const SubmitAttendancePage({super.key});
@@ -16,6 +19,21 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
   List<String> alatKerja = [];
 
   String suasana = 'sedih';
+
+  XFile? gambarSelfie;
+
+  selfie(ImageSource source) async {
+    final image = await ImagePicker().pickImage(
+      source: source,
+      preferredCameraDevice: CameraDevice.front,
+    );
+
+    if (image != null) {
+      setState(() {
+        gambarSelfie = image;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -144,6 +162,23 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                 });
               },
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    child: Text('Selfie'),
+                    onPressed: () => selfie(ImageSource.camera),
+                  ),
+                ),
+                Expanded(
+                  child: FilledButton(
+                    child: Text('Gallery'),
+                    onPressed: () => selfie(ImageSource.gallery),
+                  ),
+                ),
+              ],
+            ),
+            if (gambarSelfie != null) Image.file(File(gambarSelfie!.path)),
           ],
         ),
       ),

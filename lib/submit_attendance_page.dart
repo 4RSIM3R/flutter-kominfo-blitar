@@ -22,7 +22,7 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
 
   List<String> alatKerja = [];
 
-  String suasana = 'sedih';
+  String? suasana;
 
   XFile? gambarSelfie;
 
@@ -126,16 +126,11 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                 decoration: const InputDecoration(
                   label: Text("Lokasi Kerja"),
                 ),
-                items: const [
-                  DropdownMenuItem(
-                    value: "WFH",
-                    child: Text("WFH"),
-                  ),
-                  DropdownMenuItem(
-                    value: "WFO",
-                    child: Text("WFO"),
-                  ),
-                ],
+                items: ['WFH', 'WFO']
+                    .map(
+                      (e) => DropdownMenuItem(value: e, child: Text(e)),
+                    )
+                    .toList(),
                 onChanged: (val) {
                   setState(() {
                     lokasiKerja = val;
@@ -295,7 +290,6 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                             onPressed: () {
                               selfie(ImageSource.camera);
                               state.didChange(gambarSelfie);
-
                             },
                           ),
                         ),
@@ -306,13 +300,12 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                             onPressed: () {
                               selfie(ImageSource.gallery);
                               state.didChange(gambarSelfie);
-
                             },
                           ),
                         ),
                       ],
                     ),
-                     if (state.hasError)
+                    if (state.hasError)
                       Text(
                         state.errorText!,
                         style: TextStyle(
@@ -322,7 +315,7 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                   ],
                 ),
                 validator: (file) {
-                  if(file == null) {
+                  if (file == null) {
                     return 'Wajib selfie!';
                   }
                 },
@@ -366,7 +359,7 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                   ],
                 ),
                 validator: (posisi) {
-                  if(posisi == null) {
+                  if (posisi == null) {
                     return 'Harap perbarui lokasi!';
                   }
                 },

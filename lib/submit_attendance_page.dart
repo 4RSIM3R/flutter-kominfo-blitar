@@ -37,7 +37,41 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
   }
 
   Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
     final position = await Geolocator.getCurrentPosition();
+
     setState(() {
       _position = position;
     });
@@ -45,8 +79,10 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Submit Attendance'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -91,56 +127,74 @@ class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
                 ),
                 const SizedBox(height: 16.0),
                 Text('Alat kerja: ${_alatKerja.join(', ')}'),
-                CheckboxListTile(
-                  title: const Text('Laptop'),
-                  value: _alatKerja.contains('Laptop'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        _alatKerja.add('Laptop');
-                      } else {
-                        _alatKerja.remove('Laptop');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('Komputer'),
-                  value: _alatKerja.contains('Komputer'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        _alatKerja.add('Komputer');
-                      } else {
-                        _alatKerja.remove('Komputer');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('HP'),
-                  value: _alatKerja.contains('HP'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        _alatKerja.add('HP');
-                      } else {
-                        _alatKerja.remove('HP');
-                      }
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('Lainya'),
-                  value: _alatKerja.contains('Lainya'),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value!) {
-                        _alatKerja.add('Lainya');
-                      } else {
-                        _alatKerja.remove('Lainya');
-                      }
-                    });
+                FormField<List<String>>(
+                  initialValue: _alatKerja,
+                  builder: (state) => Column(
+                    children: [
+                      CheckboxListTile(
+                        title: const Text('Laptop'),
+                        value: _alatKerja.contains('Laptop'),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              _alatKerja.add('Laptop');
+                            } else {
+                              _alatKerja.remove('Laptop');
+                            }
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: const Text('Komputer'),
+                        value: _alatKerja.contains('Komputer'),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              _alatKerja.add('Komputer');
+                            } else {
+                              _alatKerja.remove('Komputer');
+                            }
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: const Text('HP'),
+                        value: _alatKerja.contains('HP'),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              _alatKerja.add('HP');
+                            } else {
+                              _alatKerja.remove('HP');
+                            }
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: const Text('Lainya'),
+                        value: _alatKerja.contains('Lainya'),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              _alatKerja.add('Lainya');
+                            } else {
+                              _alatKerja.remove('Lainya');
+                            }
+                          });
+                        },
+                      ),
+                      if (state.hasError)
+                        Text(
+                          state.errorText!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                    ],
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Harap pilih salah satu!';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 16.0),

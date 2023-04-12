@@ -38,7 +38,7 @@ class SubmitAttendancePage extends StatelessWidget {
           ),
 
           Center(
-            child: HelloMessage(nama: "Budi"),
+            child: HelloMessage(),
           ),
         ],
       ),
@@ -50,14 +50,14 @@ class SubmitAttendancePage extends StatelessWidget {
 class HelloMessage extends StatelessWidget {
   const HelloMessage({
     super.key,
-    required this.nama,
+     this.nama,
   });
 
-  final String nama;
+  final String? nama;
 
   @override
   Widget build(BuildContext context) {
-    return Text("Halo, $nama");
+    return Text("Halo, ${nama ?? 'test'}");
   }
 }
 

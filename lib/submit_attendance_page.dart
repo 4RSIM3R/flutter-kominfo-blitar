@@ -8,39 +8,37 @@ class SubmitAttendancePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: () {
-          //       Navigator.of(context).popUntil((route) => route.isFirst);
-          //     },
-          //     child: Text(args),
-          //   ),
-          // ),
-          Center(
-            child: TombolBintang(
-              initialFavoriteNum: 10,
-              initialIsLoved: true,
+      appBar: AppBar(
+        title: Text('Submit Attendance'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(21),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const TextField(
+              decoration: InputDecoration(
+                label: Text("Rencana Pekerjaan"),
+              ),
             ),
-          ),
-          Center(
-            child: TombolBintang(
-              initialFavoriteNum: 1000,
+            DropdownButtonFormField<String>(
+               decoration: const InputDecoration(
+                label: Text("Lokasi Kerja"),
+              ),
+              items: const [
+                DropdownMenuItem(
+                  value: "WFH",
+                  child: Text("WFH"),
+                ),
+                DropdownMenuItem(
+                  value: "WFO",
+                  child: Text("WFO"),
+                ),
+              ],
+              onChanged: (_) {},
             ),
-          ),
-          Center(
-            child: HelloMessage(nama: "Dani"),
-          ),
-          Center(
-            child: HelloMessage(nama: "Ahmad"),
-          ),
-
-          Center(
-            child: HelloMessage(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -50,7 +48,7 @@ class SubmitAttendancePage extends StatelessWidget {
 class HelloMessage extends StatelessWidget {
   const HelloMessage({
     super.key,
-     this.nama,
+    this.nama,
   });
 
   final String? nama;
@@ -138,3 +136,23 @@ class _TombolBintangState extends State<TombolBintang> {
     );
   }
 }
+
+
+// FilledButton(
+//   onPressed: () async {
+//     final result = await showDatePicker(
+//       context: context,
+//       initialDate: DateTime.now(),
+//       firstDate: DateTime(1999),
+//       lastDate: DateTime(2045),
+//     );
+
+//     final time = await showTimePicker(
+//       context: context,
+//       initialTime: TimeOfDay.now(),
+//     );
+
+//     print(result);
+//   },
+//   child: Text('Pilih date'),
+// ),

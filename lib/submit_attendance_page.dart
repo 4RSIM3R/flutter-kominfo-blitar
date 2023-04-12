@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/model/example_model.dart';
 
-class SubmitAttendancePage extends StatelessWidget {
+class SubmitAttendancePage extends StatefulWidget {
   const SubmitAttendancePage({super.key});
+
+  @override
+  State<SubmitAttendancePage> createState() => _SubmitAttendancePageState();
+}
+
+class _SubmitAttendancePageState extends State<SubmitAttendancePage> {
+  TextEditingController _rencanaController = TextEditingController();
+
+  String? lokasiKerja;
+
+  List<String> alatKerja = [];
+
+  String suasana = 'sedih';
+
+  @override
+  void dispose() {
+    _rencanaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +36,8 @@ class SubmitAttendancePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TextField(
+            TextFormField(
+              controller: _rencanaController,
               decoration: InputDecoration(
                 label: Text("Rencana Pekerjaan"),
               ),
@@ -36,49 +56,93 @@ class SubmitAttendancePage extends StatelessWidget {
                   child: Text("WFO"),
                 ),
               ],
-              onChanged: (_) {},
+              onChanged: (val) {
+                setState(() {
+                  lokasiKerja = val;
+                });
+              },
             ),
             SizedBox(height: 16),
-            Text('Alat Kerja'),
+            Text('Alat Kerja yang dipilih: ${alatKerja.join(', ')}'),
             CheckboxListTile(
               title: Text('Laptop'),
-              value: false,
-              onChanged: (_) {},
+              value: alatKerja.contains('laptop'),
+              onChanged: (checked) {
+                if (checked!) {
+                  alatKerja.add('laptop');
+                } else {
+                  alatKerja.remove('laptop');
+                }
+                setState(() {});
+              },
             ),
             CheckboxListTile(
               title: Text('Komputer'),
-              value: false,
-              onChanged: (_) {},
+              value: alatKerja.contains('komputer'),
+              onChanged: (checked) {
+                if (checked!) {
+                  alatKerja.add('komputer');
+                } else {
+                  alatKerja.remove('komputer');
+                }
+                setState(() {});
+              },
             ),
             CheckboxListTile(
               title: Text('HP'),
-              value: false,
-              onChanged: (_) {},
+              value: alatKerja.contains('hp'),
+              onChanged: (checked) {
+                if (checked!) {
+                  alatKerja.add('hp');
+                } else {
+                  alatKerja.remove('hp');
+                }
+                setState(() {});
+              },
             ),
             CheckboxListTile(
               title: Text('Lainya'),
-              value: false,
-              onChanged: (_) {},
+              value: alatKerja.contains('lainya'),
+              onChanged: (checked) {
+                if (checked!) {
+                  alatKerja.add('lainya');
+                } else {
+                  alatKerja.remove('lainya');
+                }
+                setState(() {});
+              },
             ),
             SizedBox(height: 16),
             Text('Suasana Hati'),
             RadioListTile<String>(
               title: Text('Sedih'),
               value: 'sedih',
-              groupValue: 'sedih',
-              onChanged: (_) {},
+              groupValue: suasana,
+              onChanged: (val) {
+                setState(() {
+                  suasana = val!;
+                });
+              },
             ),
             RadioListTile<String>(
               title: Text('Senang'),
               value: 'senang',
-              groupValue: 'sedih',
-              onChanged: (_) {},
+              groupValue: suasana,
+              onChanged: (val) {
+                setState(() {
+                  suasana = val!;
+                });
+              },
             ),
             RadioListTile<String>(
               title: Text('Netral'),
               value: 'netral',
-              groupValue: 'sedih',
-              onChanged: (_) {},
+              groupValue: suasana,
+              onChanged: (val) {
+                setState(() {
+                  suasana = val!;
+                });
+              },
             ),
           ],
         ),

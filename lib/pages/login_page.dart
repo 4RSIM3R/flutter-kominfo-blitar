@@ -58,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   );
                 } else if (data == LoginState.failure) {
+                  Navigator.pop(context);
                   showDialog(
                     context: context,
                     barrierDismissible: true,
@@ -76,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   );
                 } else if (data == LoginState.success) {
+                  Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/home');
                 }
               },

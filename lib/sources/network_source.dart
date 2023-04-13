@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkSource {
   static Dio dio() {
@@ -10,6 +11,8 @@ class NetworkSource {
       sendTimeout: Duration(seconds: 5),
       receiveTimeout: Duration(seconds: 5),
     );
+
+    dio.interceptors.add(PrettyDioLogger());
 
     return dio;
   }

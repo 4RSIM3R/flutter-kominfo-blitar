@@ -5,7 +5,7 @@ class NetworkSource {
     final dio = Dio();
 
     dio.options = BaseOptions(
-      baseUrl: 'https://mock.apidog.com/m1/361910-0-default',
+      baseUrl: 'https://geni.beceran.id',
       connectTimeout: Duration(seconds: 5),
       sendTimeout: Duration(seconds: 5),
       receiveTimeout: Duration(seconds: 5),

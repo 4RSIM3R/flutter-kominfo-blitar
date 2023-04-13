@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/list_attendance_page.dart';
+import 'package:flutter_training/pages/list_attendance_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed('/list-attendance');
+                      Navigator.of(context).pushNamed('/info');
                     },
                     child: Container(
                       height: 50,

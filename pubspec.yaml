@@ -38,6 +38,7 @@ dependencies:
   responsive_builder: ^0.6.4
   image_picker: ^0.8.7+2
   geolocator: ^9.0.2
+  dio: ^5.1.1
 
 dev_dependencies:
   flutter_test:

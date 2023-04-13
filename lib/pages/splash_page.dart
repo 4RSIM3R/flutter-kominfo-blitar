@@ -17,7 +17,8 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> checkToken() async {
     await Future.delayed(Duration(seconds: 3));
-    final token = SessionSource().readToken();
+    final token = await SessionSource().readToken();
+    print(token);
     if (token != null) {
       Navigator.pushNamed(context, '/home');
     } else {

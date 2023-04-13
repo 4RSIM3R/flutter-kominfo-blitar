@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_training/bloc/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +10,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final bloc = LoginBloc();
 
   bool obsecurePassword = true;
 
@@ -26,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -35,16 +39,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 16),
                 TextFormField(
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     label: Text("Email"),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) {},
+                  validator: (value) {
+                    if (value == null || value == '') {
+                      return 'Field ini wajib diisi';
+                    }
+                  },
                 ),
                 SizedBox(height: 16),
                 TextFormField(
                   obscureText: obsecurePassword,
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       onPressed: () {
@@ -57,14 +66,40 @@ class _LoginPageState extends State<LoginPage> {
                     label: Text("Password"),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) {},
+                  validator: (value) {
+                    if (value == null || value == '') {
+                      return 'Field ini wajib diisi';
+                    }
+                  },
                 ),
                 // Expanded(child: Container()),
                 SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              child: Container(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Center(child: CircularProgressIndicator()),
+                                    SizedBox(height: 16),
+                                    Text("Please wait..."),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
                     child: Text("Login"),
                   ),
                 )

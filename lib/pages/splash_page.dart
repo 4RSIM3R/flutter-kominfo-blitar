@@ -20,9 +20,9 @@ class _SplashPageState extends State<SplashPage> {
     final token = await SessionSource().readToken();
     print(token);
     if (token != null) {
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 

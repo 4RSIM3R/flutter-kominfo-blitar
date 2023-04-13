@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/pages/list_attendance_page.dart';
+import 'package:flutter_training/sources/session_source.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,14 +26,18 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      print("Skip Me");
+                    onTap: () async {
+                      await SessionSource().deleteToken();
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
-                    child: Text(
-                      "Skip",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        "Logout",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

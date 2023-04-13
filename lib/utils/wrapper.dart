@@ -9,7 +9,11 @@ class Wrapper<T> {
       return result;
     } catch (e) {
       if (e is DioError) {
-        throw Exception("Api Errr");
+        if (e.response!.statusCode == 400) {
+          throw Exception(e.response!.data['message']);
+        } else {
+          throw Exception("Api Errr");
+        }
       } else {
         rethrow;
       }
@@ -17,14 +21,13 @@ class Wrapper<T> {
   }
 
   Future<void> wrapBloc(StreamController<T> controller, Future<T> Function() futureFunction) async {
-     try {
+    try {
       final response = await futureFunction();
       controller.add(response);
     } catch (error) {
       controller.addError(error);
     }
   }
-
 }
 
 // Class Wrapper<T anything>, Wrapper<String>

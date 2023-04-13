@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             child: StreamListener<LoginState>(
               stream: bloc.state, // Stream being subscribed to
               onData: (data) {
-                if (data == LoginState.loading) {
+                if (data is LoginLoading) {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   );
-                } else if (data == LoginState.failure) {
+                } else if (data is LoginError) {
                   Navigator.pop(context);
                   showDialog(
                     context: context,
@@ -69,14 +69,14 @@ class _LoginPageState extends State<LoginPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Error"),
+                              Text(data.message),
                             ],
                           ),
                         ),
                       );
                     },
                   );
-                } else if (data == LoginState.success) {
+                } else if (data is LoginSuccess) {
                   Navigator.pop(context);
                   Navigator.pushReplacementNamed(context, '/home');
                 }

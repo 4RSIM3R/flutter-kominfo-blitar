@@ -16,6 +16,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> checkToken() async {
+    await Future.delayed(Duration(seconds: 3));
     final token = SessionSource().readToken();
     if (token != null) {
       Navigator.pushNamed(context, '/home');
@@ -28,11 +29,10 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.network(
-          "https://visitblitar.com/uploads/imgpopup/WhatsApp_Image_2022-10-06_at_12_00_18_POP_UP.jpg",
-          width: 400,
+        child: Image.asset(
+          "assets/images/figure_1.png",
           height: 300,
-          fit: BoxFit.cover,
+          width: 300,
         ),
       ),
     );

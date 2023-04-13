@@ -9,7 +9,7 @@ class AuthService {
 
   AuthService(this.dio);
 
-  Future<LoginModel> getInfo(Map<String, dynamic> payload) async {
+  Future<LoginModel> doLogin(Map<String, dynamic> payload) async {
     return await Wrapper<LoginModel>().wrap(
       () async {
         final response = await dio.post(login, data: payload);
@@ -20,5 +20,5 @@ class AuthService {
     );
   }
 
-  
+
 }

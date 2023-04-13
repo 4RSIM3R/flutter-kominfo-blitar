@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/sources/session_source.dart';
 
-class SplashPahe extends StatefulWidget {
-  const SplashPahe({super.key});
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
   @override
-  State<SplashPahe> createState() => _SplashPaheState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPaheState extends State<SplashPahe> {
-
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
@@ -19,14 +18,23 @@ class _SplashPaheState extends State<SplashPahe> {
   Future<void> checkToken() async {
     final token = SessionSource().readToken();
     if (token != null) {
-      // 
+      Navigator.pushNamed(context, '/home');
     } else {
-      // 
+      Navigator.pushNamed(context, '/login');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: Image.network(
+          "https://visitblitar.com/uploads/imgpopup/WhatsApp_Image_2022-10-06_at_12_00_18_POP_UP.jpg",
+          width: 400,
+          height: 300,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 }

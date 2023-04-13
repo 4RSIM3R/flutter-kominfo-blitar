@@ -3,6 +3,8 @@ import 'package:flutter_training/pages/home_page.dart';
 import 'package:flutter_training/pages/info/info_page.dart';
 import 'package:flutter_training/pages/info/reactive_info_page.dart';
 import 'package:flutter_training/pages/list_attendance_page.dart';
+import 'package:flutter_training/pages/login_page.dart';
+import 'package:flutter_training/pages/splash_page.dart';
 import 'package:flutter_training/pages/submit_attendance_page.dart';
 
 void main() {
@@ -21,7 +23,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.amber),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => const SplashPage(),
+        '/home': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
         '/info': (context) => ReactiveInfoPage(),
         '/list-attendance': (context) => ListAttendancePage(),
         '/submit-attendance': (context) => SubmitAttendancePage(),

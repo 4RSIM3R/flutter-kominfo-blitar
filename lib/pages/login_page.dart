@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stream_listener/flutter_stream_listener.dart';
 import 'package:flutter_training/bloc/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,6 +11,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final _email = TextEditingController();
+  final _password = TextEditingController();
 
   final bloc = LoginBloc();
 
@@ -30,80 +34,117 @@ class _LoginPageState extends State<LoginPage> {
           child: Form(
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Login",
-                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    label: Text("Email"),
-                    border: OutlineInputBorder(),
+            child: StreamListener<LoginState>(
+              stream: bloc.state, // Stream being subscribed to
+              onData: (data) {
+                if (data == LoginState.loading) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Center(child: CircularProgressIndicator()),
+                              SizedBox(height: 16),
+                              Text("Please wait..."),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else if (data == LoginState.failure) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Error"),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else if (data == LoginState.success) {
+                  Navigator.pushReplacementNamed(context, '/home');
+                }
+              },
+              onError: (error, stackTrace) {
+                // Optionally handle errors in the Stream
+              },
+              onDone: () {
+                // Optionally react to when the Stream is closed
+              },
+              cancelOnError: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Login",
+                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                   ),
-                  validator: (value) {
-                    if (value == null || value == '') {
-                      return 'Field ini wajib diisi';
-                    }
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  obscureText: obsecurePassword,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          obsecurePassword = !obsecurePassword;
-                        });
-                      },
-                      icon: Icon(obsecurePassword ? Icons.visibility : Icons.visibility_off),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      label: Text("Email"),
+                      border: OutlineInputBorder(),
                     ),
-                    label: Text("Password"),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value == '') {
-                      return 'Field ini wajib diisi';
-                    }
-                  },
-                ),
-                // Expanded(child: Container()),
-                SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              child: Container(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Center(child: CircularProgressIndicator()),
-                                    SizedBox(height: 16),
-                                    Text("Please wait..."),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Field ini wajib diisi';
                       }
                     },
-                    child: Text("Login"),
                   ),
-                )
-              ],
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _password,
+                    obscureText: obsecurePassword,
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obsecurePassword = !obsecurePassword;
+                          });
+                        },
+                        icon: Icon(obsecurePassword ? Icons.visibility : Icons.visibility_off),
+                      ),
+                      label: Text("Password"),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Field ini wajib diisi';
+                      }
+                    },
+                  ),
+                  // Expanded(child: Container()),
+                  SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          bloc.login({'email': _email.text, 'password': _password.text});
+                        }
+                      },
+                      child: Text("Login"),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

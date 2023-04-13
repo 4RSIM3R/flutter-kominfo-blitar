@@ -6,6 +6,7 @@ import 'package:flutter_training/utils/wrapper.dart';
 
 enum LoginState { init, loading, success, failure }
 
+
 class LoginBloc {
   LoginBloc() {
     _state.sink.add(LoginState.init);
@@ -15,7 +16,7 @@ class LoginBloc {
   Stream<LoginState> get state => _state.stream;
 
   Future<void> login(Map<String, dynamic> payload) async {
-    _state.sink.add(LoginState.init);
+    _state.sink.add(LoginState.loading);
     try {
       await AuthService(NetworkSource.dio()).doLogin(payload);
       _state.sink.add(LoginState.success);

@@ -40,6 +40,7 @@ dependencies:
   geolocator: ^9.0.2
   dio: ^5.1.1
   shared_preferences: ^2.1.0
+  flutter_stream_listener: ^2.0.0
 
 dev_dependencies:
   flutter_test:

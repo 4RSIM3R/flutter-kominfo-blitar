@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Training',
+      title: 'Kominfo App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.amber),
       initialRoute: '/',

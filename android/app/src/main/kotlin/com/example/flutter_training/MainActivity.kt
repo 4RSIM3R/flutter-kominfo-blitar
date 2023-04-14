@@ -1,4 +1,4 @@
-package com.example.flutter_training
+package com.blitar.training
 
 import io.flutter.embedding.android.FlutterActivity
 

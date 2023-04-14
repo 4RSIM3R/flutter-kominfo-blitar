@@ -1,6 +1,9 @@
 {
-    "message": "success",
-    "data": {
-        "health_check": "ok"
-    }
+    "title": "Coffee Table",
+    "amount": 900000,
+    "type": "SINGLE",
+    "expired_date": "2022-12-30 15:50:00",
+    "redirect_url": "https://someurl.com",
+    "is_address_required": 0,
+    "is_phone_number_required": 0
 }

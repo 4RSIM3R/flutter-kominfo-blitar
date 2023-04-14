@@ -1,0 +1,11 @@
+curl https://bigflip.id/api/v2/pwf/1/bill \
+    -X PUT \
+    -u SkRKNUpERXpKRmRyTUhWQ1pIcFdSR3RMZFRkWmFuVmxSMmRzY1dWWmEwRlJZbnBhTVZKdVozQmFkRlJoV1dzdVFrMVJPRmxVZW5SMldsVlQ=:: \
+    -d title="Coffee Table" \
+    -d amount="900000" \
+    -d type="SINGLE" \
+    -d expired_date="2022-12-30 15:50:00" \
+    -d redirect_url="https://someurl.com" \
+    -d status="INACTIVE" \
+    -d is_address_required="0" \
+    -d is_phone_number_required="0"
